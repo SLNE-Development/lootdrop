@@ -1,7 +1,6 @@
 package de.castcrafter.lootdrop.listener;
 
 import de.castcrafter.lootdrop.Main;
-import de.castcrafter.lootdrop.larry.LarryListener;
 import de.castcrafter.lootdrop.listener.listeners.ChestListener;
 import de.castcrafter.lootdrop.listener.listeners.ConfigSaveListener;
 import de.castcrafter.lootdrop.listener.listeners.JoinListener;
@@ -29,7 +28,6 @@ public class ListenerManager {
     pluginManager.registerEvents(new SpecialItemListener(), plugin);
     pluginManager.registerEvents(new ConfigSaveListener(), plugin);
     pluginManager.registerEvents(new LocatorListener(), plugin);
-    pluginManager.registerEvents(new LarryListener(), plugin);
     pluginManager.registerEvents(new ChestListener(), plugin);
     pluginManager.registerEvents(new JoinListener(), plugin);
   }

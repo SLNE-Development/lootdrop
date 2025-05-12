@@ -11,7 +11,6 @@ configurate-core = "4.0.0"
 configurate-yml = "4.0.0"
 betterhud = "1.12"
 bettercommand = "1.4.3"
-znpc = "2.1.0-SNAPSHOT"
 chestprotect = "5.19.16"
 
 [libraries]
@@ -25,6 +24,5 @@ configurate-yml = { module = "org.spongepowered:configurate-yaml", version.ref =
 betterhud-standard = { module = "io.github.toxicity188:BetterHud-standard-api", version.ref = "betterhud" }
 betterhud-bukkit = { module = "io.github.toxicity188:BetterHud-bukkit-api", version.ref = "betterhud" }
 betterhud-commands = { module = "io.github.toxicity188:BetterCommand", version.ref = "bettercommand" }
-znpc = { module = "lol.pyr:znpcsplus-api", version.ref = "znpc" }
 chestprotect = { module = "com.github.angeschossen:ChestProtectAPI", version.ref = "chestprotect" }
 

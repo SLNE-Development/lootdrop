@@ -3,8 +3,6 @@ package de.castcrafter.lootdrop.timer;
 import de.castcrafter.lootdrop.Main;
 import de.castcrafter.lootdrop.config.LootDropConfig;
 import de.castcrafter.lootdrop.config.trades.SupplyTrade;
-import de.castcrafter.lootdrop.larry.LarryNpc;
-import de.castcrafter.lootdrop.larry.LarrySpawns;
 import de.castcrafter.lootdrop.utils.Chat;
 import de.castcrafter.lootdrop.utils.SoundUtils;
 import java.time.Duration;
@@ -12,7 +10,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -30,21 +27,6 @@ public class LootDropTimer extends BukkitRunnable {
 
     if (currentTime.isBefore(startTime)) {
       return;
-    }
-
-    ZonedDateTime lastLarryRespawn = LootDropConfig.INSTANCE.getLastLarryRespawn();
-    long respawnLarryEverySeconds = LootDropConfig.INSTANCE.getRespawnLarryEverySeconds();
-
-    if (Duration.between(lastLarryRespawn, currentTime).toSeconds() >= respawnLarryEverySeconds) {
-      LootDropConfig.INSTANCE.setLastLarryRespawn(currentTime);
-      LarryNpc.updateLocation(LarrySpawns.getRandomLocation());
-
-      TextColor color = TextColor.fromHexString("#00FF40");
-      for (Player player : Bukkit.getOnlinePlayers()) {
-        Chat.sendMessage(player,
-            Component.text("Larry wurde an einem neuen Ort gesichtet!", color));
-        SoundUtils.playSound(player, Sound.ENTITY_CHICKEN_EGG, 1, 1);
-      }
     }
 
     long currentOffset = Duration.between(startTime, currentTime).toSeconds();

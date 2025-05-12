@@ -23,7 +23,6 @@ dependencies {
     compileOnlyApi(libs.betterhud.standard)
     compileOnlyApi(libs.betterhud.bukkit)
     compileOnlyApi(libs.betterhud.commands)
-    compileOnlyApi(libs.znpc)
     compileOnlyApi(libs.chestprotect)
 
     api(libs.inventory.framework)

@@ -22,9 +22,6 @@ public class LootDropConfig {
   private transient YamlConfigurationLoader loader;
   private transient CommentedConfigurationNode node;
 
-  private long lastLarryRespawn = 0;
-  private long respawnLarryEverySeconds = 10;
-
   private long startTimestampSeconds;
   private transient LootDropTimer timer;
 
@@ -63,7 +60,6 @@ public class LootDropConfig {
 
       trades = fetchedConfig.trades;
       startTimestampSeconds = fetchedConfig.startTimestampSeconds;
-      respawnLarryEverySeconds = fetchedConfig.respawnLarryEverySeconds;
     } catch (Exception exception) {
       LOGGER.error("Failed to load configuration", exception);
     }
@@ -93,19 +89,6 @@ public class LootDropConfig {
   public ZonedDateTime getStartTimestamp() {
     return ZonedDateTime.ofInstant(Instant.ofEpochSecond(startTimestampSeconds),
         ZoneId.systemDefault());
-  }
-
-  public long getRespawnLarryEverySeconds() {
-    return respawnLarryEverySeconds;
-  }
-
-  public ZonedDateTime getLastLarryRespawn() {
-    return ZonedDateTime.ofInstant(Instant.ofEpochSecond(lastLarryRespawn),
-        ZoneId.systemDefault());
-  }
-
-  public void setLastLarryRespawn(ZonedDateTime lastLarryRespawn) {
-    this.lastLarryRespawn = lastLarryRespawn.toEpochSecond();
   }
 
   public LootDropTimer getTimer() {
