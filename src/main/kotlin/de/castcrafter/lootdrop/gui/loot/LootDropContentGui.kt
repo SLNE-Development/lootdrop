@@ -9,12 +9,12 @@ import dev.slne.surf.surfapi.core.api.messages.adventure.text
 import dev.slne.surf.surfapi.core.api.util.toObjectList
 import org.bukkit.entity.Player
 
-fun lootDropContentGui(goodLoot: Boolean, player: Player) =
+fun lootDropContentGui(goodLoot: Boolean, player: Player, editable: Boolean = true) =
     playerMenu(text("LootDrop Content - ${if (goodLoot) "Gut" else "Schlecht"}"), player) {
-        this.setOnBottomClick { event -> event.isCancelled = false }
-        this.setOnBottomDrag { event -> event.isCancelled = false }
-        this.setOnTopClick { event -> event.isCancelled = false }
-        this.setOnTopDrag { event -> event.isCancelled = false }
+        this.setOnBottomClick { event -> event.isCancelled = !editable }
+        this.setOnBottomDrag { event -> event.isCancelled = !editable }
+        this.setOnTopClick { event -> event.isCancelled = !editable }
+        this.setOnTopDrag { event -> event.isCancelled = !editable }
 
         setOnClose {
             val storageContent = inventory.storageContents.mapNotNull { it }.toObjectList()

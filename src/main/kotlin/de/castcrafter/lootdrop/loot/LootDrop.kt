@@ -48,14 +48,15 @@ class LootDrop(
     private lateinit var backingArmorStand: ArmorStand
     private lateinit var animator: Job
 
+    val currentLocation get() = backingArmorStand.location
     val uniqueId get() = backingArmorStand.uniqueId
 
     fun spawn() {
+        LootDropManager.lootdrops.add(this)
         register()
 
         backingArmorStand = initialLocation.world.spawn(initialLocation, ArmorStand::class.java) {
             it.isInvisible = true
-            it.setGravity(false)
             it.isPersistent = false
             it.setDisabledSlots(
                 EquipmentSlot.HEAD,
@@ -80,7 +81,7 @@ class LootDrop(
                     0.3,
                     0.0
                 )
-                delay(10.ticks)
+                delay(1.ticks)
             }
         }
 
@@ -143,9 +144,10 @@ class LootDrop(
         }
     }
 
-    private fun despawn() {
+    fun despawn() {
         animator.cancel()
         backingArmorStand.remove()
+        LootDropManager.lootdrops.remove(this)
         unregister()
     }
 

@@ -79,6 +79,25 @@ fun lootDropGui(player: Player) = playerMenu(text("LootDrop"), player, 5) {
             }
         }
 
+        item(slot(6, 1), ItemStack(Material.BARREL) {
+            displayName {
+                primary("LootDrop Liste")
+            }
+            buildLore {
+                line { }
+                line {
+                    spacer("Hier kann eine Liste")
+                }
+                line {
+                    spacer("von LootDrops eingesehen werden")
+                }
+            }
+        }) {
+            click = {
+                lootDropListGui(player).open()
+            }
+        }
+
         item(slot(7, 1), ItemStack(Material.SPAWNER) {
             displayName {
                 primary("LootDrop erstellen")

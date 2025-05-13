@@ -17,7 +17,7 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 
-fun lootDropProbabilityGui(player: Player) =
+fun lootDropProbabilityGui(player: Player, editable: Boolean = true) =
     playerMenu(text("LootDrop Wahrscheinlichtkeit"), player, 5) {
         drawOutlineRow(0)
         drawOutlineRow(4)
@@ -40,14 +40,16 @@ fun lootDropProbabilityGui(player: Player) =
                 }
             }) {
                 click = {
-                    LootDropConfigurator.goodChance -= 10
+                    if (editable) {
+                        LootDropConfigurator.goodChance -= 10
 
-                    player.playSound {
-                        type(Sound.UI_BUTTON_CLICK)
-                        volume(.5f)
+                        player.playSound {
+                            type(Sound.UI_BUTTON_CLICK)
+                            volume(.5f)
+                        }
+
+                        updateProbabilityDisplay(guiItemStack)
                     }
-
-                    updateProbabilityDisplay(guiItemStack)
                 }
             }
 
@@ -66,14 +68,16 @@ fun lootDropProbabilityGui(player: Player) =
                 }
             }) {
                 click = {
-                    LootDropConfigurator.goodChance -= 1
+                    if (editable) {
+                        LootDropConfigurator.goodChance -= 1
 
-                    player.playSound {
-                        type(Sound.UI_BUTTON_CLICK)
-                        volume(.5f)
+                        player.playSound {
+                            type(Sound.UI_BUTTON_CLICK)
+                            volume(.5f)
+                        }
+
+                        updateProbabilityDisplay(guiItemStack)
                     }
-
-                    updateProbabilityDisplay(guiItemStack)
                 }
             }
 
@@ -100,14 +104,16 @@ fun lootDropProbabilityGui(player: Player) =
                 }
             }) {
                 click = {
-                    LootDropConfigurator.goodChance += 1
+                    if (editable) {
+                        LootDropConfigurator.goodChance += 1
 
-                    player.playSound {
-                        type(Sound.UI_BUTTON_CLICK)
-                        volume(.5f)
+                        player.playSound {
+                            type(Sound.UI_BUTTON_CLICK)
+                            volume(.5f)
+                        }
+
+                        updateProbabilityDisplay(guiItemStack)
                     }
-
-                    updateProbabilityDisplay(guiItemStack)
                 }
             }
 
@@ -126,14 +132,16 @@ fun lootDropProbabilityGui(player: Player) =
                 }
             }) {
                 click = {
-                    LootDropConfigurator.goodChance += 10
+                    if (editable) {
+                        LootDropConfigurator.goodChance += 10
 
-                    player.playSound {
-                        type(Sound.UI_BUTTON_CLICK)
-                        volume(.5f)
+                        player.playSound {
+                            type(Sound.UI_BUTTON_CLICK)
+                            volume(.5f)
+                        }
+
+                        updateProbabilityDisplay(guiItemStack)
                     }
-
-                    updateProbabilityDisplay(guiItemStack)
                 }
             }
         }
