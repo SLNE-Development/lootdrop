@@ -4,24 +4,14 @@ import com.github.shynixn.mccoroutine.folia.SuspendingJavaPlugin
 import de.castcrafter.lootdrop.command.CommandManager
 import de.castcrafter.lootdrop.listener.ListenerManager
 import de.castcrafter.lootdrop.placeholder.LootDropPlaceholderExpansion
+import dev.slne.surf.surfapi.bukkit.api.hook.papi.papiHook
 import org.bukkit.plugin.java.JavaPlugin
-import java.security.NoSuchAlgorithmException
-import java.security.SecureRandom
 
 val plugin: Main get() = JavaPlugin.getPlugin(Main::class.java)
 
 class Main : SuspendingJavaPlugin() {
 
-    lateinit var random: SecureRandom
-        private set
-
     override fun onLoad() {
-        random = try {
-            SecureRandom.getInstanceStrong()
-        } catch (e: NoSuchAlgorithmException) {
-            SecureRandom()
-        }
-
 //        LootDropConfig.INSTANCE.loadConfig()
 //        PlayerUseConfig.INSTANCE.loadConfig()
     }
@@ -32,14 +22,9 @@ class Main : SuspendingJavaPlugin() {
 
 //        LootDropConfig.INSTANCE.loadAndStartTimerIfExistsInConfig()
 
-        LootDropPlaceholderExpansion.register()
+        papiHook.register(LootDropPlaceholderExpansion)
     }
 
     override fun onDisable() {
-    }
-
-    companion object {
-        @JvmStatic
-        val instance get() = plugin
     }
 }

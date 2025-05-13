@@ -1,5 +1,6 @@
 package de.castcrafter.lootdrop.locator
 
+import dev.slne.surf.surfapi.core.api.font.toSmallCaps
 import it.unimi.dsi.fastutil.Pair
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -12,11 +13,14 @@ import org.bukkit.event.player.PlayerMoveEvent
 object LocatorListener : Listener {
 
     fun onMove(event: PlayerMoveEvent) {
+        if (!event.hasChangedOrientation() && !event.hasChangedBlock()) {
+            return
+        }
+
         val player = event.player
         val startingLocation = player.eyeLocation
 
         val toLocate = player.location
-        // FIXME: 12.05.2025 14:32 Change back to resolving the class of toLocate::class? Ask twisti how to do this
         val locator = Locators.getLocator<Location>() ?: return
 
         val result = locator.locate(
@@ -33,7 +37,7 @@ object LocatorListener : Listener {
         val color = TextColor.fromHexString("#00FF40")
 
         val actionBar = Component.text()
-        actionBar.append(Component.text("ғɪɴᴅᴇ ʟᴀʀʀʏ", color, TextDecoration.BOLD))
+        actionBar.append(Component.text("Location".toSmallCaps(), color, TextDecoration.BOLD))
         actionBar.append(Component.text(" | ", NamedTextColor.GRAY))
         actionBar.append(Component.text(directionDisplay!!, color))
         actionBar.append(Component.text(" | ", NamedTextColor.GRAY))

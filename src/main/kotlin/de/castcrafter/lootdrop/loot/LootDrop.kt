@@ -159,6 +159,7 @@ class LootDrop(
 
         val damagee = event.damager as? Player ?: run {
             val projectile = event.damager as? Projectile ?: return@run null
+            projectile.remove()
 
             return@run projectile.shooter as? Player
         } ?: return

@@ -1,5 +1,6 @@
 package de.castcrafter.lootdrop.command.commands.event.mines.seamine
 
+import de.castcrafter.lootdrop.listener.listeners.SEAMINE_KEY
 import de.castcrafter.lootdrop.utils.PermissionRegistry
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor
@@ -9,6 +10,7 @@ import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import kotlin.math.floor
 
 fun CommandAPICommand.seamineCommand() = subcommand("seamine") {
@@ -41,7 +43,7 @@ private fun summonMine(location: Location): Boolean {
 
     armorStand.isInvisible = true
     armorStand.setGravity(false)
-    armorStand.addScoreboardTag("seamine")
+    armorStand.persistentDataContainer.set(SEAMINE_KEY, PersistentDataType.BYTE, 1.toByte())
     armorStand.setDisabledSlots(
         EquipmentSlot.HEAD,
         EquipmentSlot.CHEST,
