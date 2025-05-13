@@ -9,7 +9,7 @@ import dev.slne.surf.surfapi.bukkit.api.event.register
 import dev.slne.surf.surfapi.bukkit.api.event.unregister
 import dev.slne.surf.surfapi.core.api.messages.adventure.playSound
 import dev.slne.surf.surfapi.core.api.messages.adventure.showTitle
-import dev.slne.surf.surfapi.core.api.util.objectListOf
+import dev.slne.surf.surfapi.core.api.util.random
 import it.unimi.dsi.fastutil.objects.ObjectList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -24,6 +24,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class LootDrop(
     private val initiator: OfflinePlayer?,
@@ -39,9 +40,9 @@ class LootDrop(
 
         return@run Location(first, 0.0, highestBlock.y.toDouble() + 20.toDouble(), 0.0)
     },
-    private val goodChance: Double,
-    private val goodLootContent: ObjectList<ItemStack> = objectListOf(),
-    private val badLootContent: ObjectList<ItemStack> = objectListOf(),
+    private val goodChance: Int = LootDropConfigurator.goodChance,
+    private val goodLootContent: ObjectList<ItemStack> = LootDropConfigurator.goodLootContent,
+    private val badLootContent: ObjectList<ItemStack> = LootDropConfigurator.badLootContent,
 ) : Listener {
 
     private lateinit var backingArmorStand: ArmorStand
@@ -54,6 +55,8 @@ class LootDrop(
 
         backingArmorStand = initialLocation.world.spawn(initialLocation, ArmorStand::class.java) {
             it.isInvisible = true
+            it.setGravity(false)
+            it.isPersistent = false
             it.setDisabledSlots(
                 EquipmentSlot.HEAD,
                 EquipmentSlot.CHEST,
@@ -62,15 +65,7 @@ class LootDrop(
                 EquipmentSlot.HAND,
                 EquipmentSlot.OFF_HAND,
             )
-            it.equipment.helmet = run {
-                val item = ItemStack.of(Material.HEART_OF_THE_SEA)
-
-                item.editMeta { meta ->
-                    meta.setCustomModelData(1)
-                }
-
-                return@run item
-            }
+            it.equipment.helmet = ItemStack.of(Material.HEART_OF_THE_SEA)
         }
 
         animator = plugin.launch(plugin.entityDispatcher(backingArmorStand)) {
@@ -85,7 +80,7 @@ class LootDrop(
                     0.3,
                     0.0
                 )
-                delay(1.ticks)
+                delay(10.ticks)
             }
         }
 
@@ -98,9 +93,9 @@ class LootDrop(
                     spacer("Location: ${initialLocation.blockX}, ${initialLocation.blockY}, ${initialLocation.blockZ}")
                 }
                 times {
-                    fadeIn(10.milliseconds)
-                    stay(200.milliseconds)
-                    fadeOut(10.milliseconds)
+                    fadeIn(100.milliseconds)
+                    stay(5.seconds)
+                    fadeOut(100.milliseconds)
                 }
             }
 
@@ -116,8 +111,8 @@ class LootDrop(
 
         despawn()
 
-        val randomDouble = plugin.random.nextDouble()
-        val lootContent = if (randomDouble <= goodChance) {
+        val randomInt = random.nextInt(101)
+        val lootContent = if (randomInt <= goodChance) {
             goodLootContent
         } else {
             badLootContent
