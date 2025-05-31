@@ -90,7 +90,7 @@ class LootDrop(
         Bukkit.getOnlinePlayers().forEach { player ->
             player.showTitle {
                 title {
-                    primary("Loot Drop")
+                    text("뉃")
                 }
                 subtitle {
                     text(Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("Location"))
@@ -149,7 +149,7 @@ class LootDrop(
         forEachPlayer { player ->
             player.showTitle {
                 title {
-                    primary("LootDrop")
+                    text("뉃")
                 }
                 subtitle {
                     text(Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("Eingesammelt\t\tdurch"))
