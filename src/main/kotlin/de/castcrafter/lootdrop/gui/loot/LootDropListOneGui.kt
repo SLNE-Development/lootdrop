@@ -5,6 +5,7 @@ import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
 import de.castcrafter.lootdrop.loot.LootDrop
 import de.castcrafter.lootdrop.plugin
+import dev.slne.surf.bitmap.bitmaps.Bitmaps
 import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
 import dev.slne.surf.surfapi.bukkit.api.builder.buildLore
 import dev.slne.surf.surfapi.bukkit.api.builder.displayName
@@ -17,11 +18,20 @@ import dev.slne.surf.surfapi.core.api.messages.adventure.sendText
 import dev.slne.surf.surfapi.core.api.messages.adventure.text
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.future.await
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
 fun SurfChestSinglePlayerGui.lootDropListOneGui(player: Player, lootDrop: LootDrop) =
-    childPlayerMenu(text(lootDrop.uniqueId.toString()), 5) {
+    childPlayerMenu(
+        text(
+            Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString(
+                lootDrop.uniqueId.toString().replace("-", "")
+            ),
+            NamedTextColor.WHITE
+        ),
+        5
+    ) {
         drawOutlineRow(0)
         drawOutlineRow(4)
 

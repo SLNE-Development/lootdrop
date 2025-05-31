@@ -5,6 +5,7 @@ import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
 import de.castcrafter.lootdrop.loot.action.LootActions
 import de.castcrafter.lootdrop.plugin
+import dev.slne.surf.bitmap.bitmaps.Bitmaps
 import dev.slne.surf.surfapi.bukkit.api.event.register
 import dev.slne.surf.surfapi.bukkit.api.event.unregister
 import dev.slne.surf.surfapi.core.api.messages.adventure.playSound
@@ -91,7 +92,8 @@ class LootDrop(
                     primary("Loot Drop")
                 }
                 subtitle {
-                    spacer("Location: ${initialLocation.blockX}, ${initialLocation.blockY}, ${initialLocation.blockZ}")
+                    text(Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("Location"))
+                    spacer(" ${initialLocation.blockX}, ${initialLocation.blockY}, ${initialLocation.blockZ}")
                 }
                 times {
                     fadeIn(100.milliseconds)

@@ -1,6 +1,7 @@
 package de.castcrafter.lootdrop.gui.loot
 
 import de.castcrafter.lootdrop.loot.LootDrop
+import dev.slne.surf.bitmap.bitmaps.Bitmaps
 import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
 import dev.slne.surf.surfapi.bukkit.api.builder.buildLore
 import dev.slne.surf.surfapi.bukkit.api.builder.displayName
@@ -9,10 +10,18 @@ import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.playerMenu
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.slot
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.staticPane
 import dev.slne.surf.surfapi.core.api.messages.adventure.text
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-fun lootDropGui(player: Player) = playerMenu(text("LootDrop"), player, 5) {
+fun lootDropGui(player: Player) = playerMenu(
+    text(
+        Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("LootDrop"),
+        NamedTextColor.WHITE
+    ),
+    player,
+    5
+) {
     drawOutlineRow(0)
     drawOutlineRow(4)
 

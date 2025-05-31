@@ -1,4 +1,3 @@
-import dev.slne.surf.surfapi.gradle.util.registerRequired
 import dev.slne.surf.surfapi.gradle.util.withSurfApiBukkit
 
 plugins {
@@ -23,6 +22,7 @@ surfPaperPluginApi {
 dependencies {
     compileOnlyApi(libs.nexo)
     compileOnlyApi(libs.chestprotect)
+    api(libs.glyphs)
 }
 
 group = "de.castcrafter"

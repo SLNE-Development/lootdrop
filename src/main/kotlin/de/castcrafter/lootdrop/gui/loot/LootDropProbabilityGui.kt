@@ -3,6 +3,7 @@ package de.castcrafter.lootdrop.gui.loot
 import com.github.stefvanschie.inventoryframework.gui.GuiItem
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui
 import de.castcrafter.lootdrop.loot.LootDropConfigurator
+import dev.slne.surf.bitmap.bitmaps.Bitmaps
 import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
 import dev.slne.surf.surfapi.bukkit.api.builder.buildLore
 import dev.slne.surf.surfapi.bukkit.api.builder.displayName
@@ -14,12 +15,19 @@ import dev.slne.surf.surfapi.bukkit.api.inventory.types.SurfChestSinglePlayerGui
 import dev.slne.surf.surfapi.core.api.messages.adventure.buildText
 import dev.slne.surf.surfapi.core.api.messages.adventure.playSound
 import dev.slne.surf.surfapi.core.api.messages.adventure.text
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 
 fun SurfChestSinglePlayerGui.lootDropProbabilityGui(player: Player, editable: Boolean = true) =
-    childPlayerMenu(text("LootDrop Wahrscheinlichtkeit"), 5) {
+    childPlayerMenu(
+        text(
+            Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("LootDrop\t\tWahrscheinlichkeit"),
+            NamedTextColor.WHITE
+        ),
+        5
+    ) {
         drawOutlineRow(0)
         drawOutlineRow(4)
 

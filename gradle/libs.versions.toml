@@ -3,6 +3,7 @@
 #bettercommand = "1.4.3"
 nexo = "1.1.0"
 chestprotect = "5.19.16"
+glyphs = "1.0.0-SNAPSHOT"
 
 [libraries]
 #betterhud-standard = { module = "io.github.toxicity188:BetterHud-standard-api", version.ref = "betterhud" }
@@ -10,4 +11,5 @@ chestprotect = "5.19.16"
 #betterhud-commands = { module = "io.github.toxicity188:BetterCommand", version.ref = "bettercommand" }
 nexo = { module = "com.nexomc:nexo", version.ref = "nexo" }
 chestprotect = { module = "com.github.angeschossen:ChestProtectAPI", version.ref = "chestprotect" }
+glyphs = { module = "dev.slne.surf:surf-bitmap-provider-bitmaps", version.ref = "glyphs" }
 

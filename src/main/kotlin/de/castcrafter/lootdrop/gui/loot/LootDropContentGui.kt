@@ -2,6 +2,7 @@ package de.castcrafter.lootdrop.gui.loot
 
 import de.castcrafter.lootdrop.loot.LootDropConfigurator
 import de.castcrafter.lootdrop.plugin
+import dev.slne.surf.bitmap.bitmaps.Bitmaps
 import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
 import dev.slne.surf.surfapi.bukkit.api.builder.displayName
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.childPlayerMenu
@@ -12,6 +13,7 @@ import dev.slne.surf.surfapi.bukkit.api.inventory.types.SurfChestSinglePlayerGui
 import dev.slne.surf.surfapi.core.api.messages.adventure.sendText
 import dev.slne.surf.surfapi.core.api.messages.adventure.text
 import dev.slne.surf.surfapi.core.api.util.toObjectList
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataType
@@ -19,7 +21,13 @@ import org.bukkit.persistence.PersistentDataType
 fun SurfChestSinglePlayerGui.lootDropContentGui(
     goodLoot: Boolean,
     editable: Boolean = true
-) = childPlayerMenu(text("LootDrop Content - ${if (goodLoot) "Gut" else "Schlecht"}"), 5) {
+) = childPlayerMenu(
+    text(
+        Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("LootDrop\t\tInhalt\t\t-\t\t${if (goodLoot) "Gut" else "Schlecht"}"),
+        NamedTextColor.WHITE
+    ),
+    5
+) {
     val edgeKey = NamespacedKey(plugin, "edge")
 
     this.setOnBottomClick { event -> event.isCancelled = !editable }
@@ -78,7 +86,7 @@ fun SurfChestSinglePlayerGui.lootDropContentGui(
 
     setOnClose {
         if (!editable) return@setOnClose
-        
+
         val storageContent = inventory.storageContents.filterNotNull().filterNot { item ->
             item.persistentDataContainer.has(edgeKey)
         }.toObjectList()
