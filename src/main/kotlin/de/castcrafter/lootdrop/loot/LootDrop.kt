@@ -8,6 +8,7 @@ import de.castcrafter.lootdrop.plugin
 import dev.slne.surf.bitmap.bitmaps.Bitmaps
 import dev.slne.surf.surfapi.bukkit.api.event.register
 import dev.slne.surf.surfapi.bukkit.api.event.unregister
+import dev.slne.surf.surfapi.bukkit.api.util.forEachPlayer
 import dev.slne.surf.surfapi.core.api.messages.adventure.playSound
 import dev.slne.surf.surfapi.core.api.messages.adventure.showTitle
 import dev.slne.surf.surfapi.core.api.util.random
@@ -143,6 +144,31 @@ class LootDrop(
             type(Sound.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR)
             volume(.5f)
             source(net.kyori.adventure.sound.Sound.Source.BLOCK)
+        }
+
+        forEachPlayer { player ->
+            player.showTitle {
+                title {
+                    primary("LootDrop")
+                }
+                subtitle {
+                    text(Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("Gesammelt von"))
+                    spacer(" ${collector.name}")
+                }
+                times {
+                    fadeIn(100.milliseconds)
+                    stay(5.seconds)
+                    fadeOut(100.milliseconds)
+                }
+            }
+
+            if (player != collector) {
+                player.playSound {
+                    type(Sound.ENTITY_ITEM_PICKUP)
+                    volume(.5f)
+                    source(net.kyori.adventure.sound.Sound.Source.BLOCK)
+                }
+            }
         }
     }
 
