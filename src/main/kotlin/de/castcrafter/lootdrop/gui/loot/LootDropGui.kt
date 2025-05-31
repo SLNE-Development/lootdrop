@@ -33,7 +33,7 @@ fun lootDropGui(player: Player) = playerMenu(text("LootDrop"), player, 5) {
             }
         }) {
             click = {
-                lootDropContentGui(true, player).open()
+                lootDropContentGui(true).open()
             }
         }
 
@@ -53,7 +53,7 @@ fun lootDropGui(player: Player) = playerMenu(text("LootDrop"), player, 5) {
             }
         }) {
             click = {
-                lootDropContentGui(false, player).open()
+                lootDropContentGui(false).open()
             }
         }
 

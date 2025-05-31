@@ -6,10 +6,11 @@ import de.castcrafter.lootdrop.loot.LootDropConfigurator
 import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
 import dev.slne.surf.surfapi.bukkit.api.builder.buildLore
 import dev.slne.surf.surfapi.bukkit.api.builder.displayName
+import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.childPlayerMenu
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.drawOutlineRow
-import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.playerMenu
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.slot
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.staticPane
+import dev.slne.surf.surfapi.bukkit.api.inventory.types.SurfChestSinglePlayerGui
 import dev.slne.surf.surfapi.core.api.messages.adventure.buildText
 import dev.slne.surf.surfapi.core.api.messages.adventure.playSound
 import dev.slne.surf.surfapi.core.api.messages.adventure.text
@@ -17,8 +18,8 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 
-fun lootDropProbabilityGui(player: Player, editable: Boolean = true) =
-    playerMenu(text("LootDrop Wahrscheinlichtkeit"), player, 5) {
+fun SurfChestSinglePlayerGui.lootDropProbabilityGui(player: Player, editable: Boolean = true) =
+    childPlayerMenu(text("LootDrop Wahrscheinlichtkeit"), 5) {
         drawOutlineRow(0)
         drawOutlineRow(4)
 
@@ -87,6 +88,9 @@ fun lootDropProbabilityGui(player: Player, editable: Boolean = true) =
                 }
             }) {
                 guiItemStack = this
+                click = {
+                    whoClicked.backToParent()
+                }
             }
 
             item(slot(5, 1), ItemStack(Material.GREEN_DYE) {

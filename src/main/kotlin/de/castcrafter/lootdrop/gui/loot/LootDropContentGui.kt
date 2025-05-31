@@ -1,56 +1,105 @@
 package de.castcrafter.lootdrop.gui.loot
 
 import de.castcrafter.lootdrop.loot.LootDropConfigurator
-import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.playerMenu
+import de.castcrafter.lootdrop.plugin
+import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
+import dev.slne.surf.surfapi.bukkit.api.builder.displayName
+import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.childPlayerMenu
+import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.drawOutlineRow
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.slot
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.staticPane
+import dev.slne.surf.surfapi.bukkit.api.inventory.types.SurfChestSinglePlayerGui
 import dev.slne.surf.surfapi.core.api.messages.adventure.sendText
 import dev.slne.surf.surfapi.core.api.messages.adventure.text
 import dev.slne.surf.surfapi.core.api.util.toObjectList
-import org.bukkit.entity.Player
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.persistence.PersistentDataType
 
-fun lootDropContentGui(goodLoot: Boolean, player: Player, editable: Boolean = true) =
-    playerMenu(text("LootDrop Content - ${if (goodLoot) "Gut" else "Schlecht"}"), player) {
-        this.setOnBottomClick { event -> event.isCancelled = !editable }
-        this.setOnBottomDrag { event -> event.isCancelled = !editable }
-        this.setOnTopClick { event -> event.isCancelled = !editable }
-        this.setOnTopDrag { event -> event.isCancelled = !editable }
+fun SurfChestSinglePlayerGui.lootDropContentGui(
+    goodLoot: Boolean,
+    editable: Boolean = true
+) = childPlayerMenu(text("LootDrop Content - ${if (goodLoot) "Gut" else "Schlecht"}"), 5) {
+    val edgeKey = NamespacedKey(plugin, "edge")
 
-        setOnClose {
-            val storageContent = inventory.storageContents.mapNotNull { it }.toObjectList()
+    this.setOnBottomClick { event -> event.isCancelled = !editable }
+    this.setOnBottomDrag { event -> event.isCancelled = !editable }
+    this.setOnTopClick { event -> event.isCancelled = !editable }
+    this.setOnTopDrag { event -> event.isCancelled = !editable }
+    val lootContent = if (goodLoot) {
+        LootDropConfigurator.goodLootContent
+    } else {
+        LootDropConfigurator.badLootContent
+    }
 
-            if (goodLoot) {
-                LootDropConfigurator.goodLootContent = storageContent
-            } else {
-                LootDropConfigurator.badLootContent = storageContent
-            }
-
-            it.player.sendText {
-                appendPrefix()
-
-                success("Der ")
-                if (goodLoot) {
-                    variableValue("gute")
-                } else {
-                    variableValue("schlechte")
-                }
-                success(" LootDrop Inhalt wurde aktualisiert.")
-            }
+    drawOutlineRow(0).items.forEach {
+        it.item.editPersistentDataContainer { container ->
+            container.set(
+                edgeKey,
+                PersistentDataType.BOOLEAN, true
+            )
         }
-
-        val lootContent = if (goodLoot) {
-            LootDropConfigurator.goodLootContent
-        } else {
-            LootDropConfigurator.badLootContent
+    }
+    drawOutlineRow(4).items.forEach {
+        it.item.editPersistentDataContainer { container ->
+            container.set(
+                edgeKey,
+                PersistentDataType.BOOLEAN, true
+            )
         }
+    }
 
-        staticPane(slot(0, 0), 6) {
-            if (lootContent.size > this@staticPane.length) {
-                error("$lootContent more than ${inventory.size} loot.")
+    staticPane(slot(0, 4), 1) {
+        item(slot(4, 0), ItemStack(Material.ARROW) {
+            displayName {
+                primary("Zurück")
             }
 
-            lootContent.forEachIndexed { index, itemStack ->
-                item(slot(index % 9, index / 9), itemStack) {}
+            editPersistentDataContainer {
+                it.set(edgeKey, PersistentDataType.BOOLEAN, true)
+            }
+        }) {
+            click = {
+                isCancelled = true
+                whoClicked.backToParent()
             }
         }
     }
+
+    staticPane(slot(0, 1), 3) {
+        if (lootContent.size > this@staticPane.length) {
+            error("$lootContent more than ${inventory.size} loot.")
+        }
+
+        lootContent.forEachIndexed { index, itemStack ->
+            item(slot(index % 9, index / 9), itemStack) { }
+        }
+    }
+
+    setOnClose {
+        if (!editable) return@setOnClose
+        
+        val storageContent = inventory.storageContents.filterNotNull().filterNot { item ->
+            item.persistentDataContainer.has(edgeKey)
+        }.toObjectList()
+
+        if (goodLoot) {
+            LootDropConfigurator.goodLootContent = storageContent
+        } else {
+            LootDropConfigurator.badLootContent = storageContent
+        }
+
+        it.player.sendText {
+            appendPrefix()
+
+            success("Der ")
+            if (goodLoot) {
+                variableValue("gute")
+            } else {
+                variableValue("schlechte")
+            }
+            success(" LootDrop Inhalt wurde aktualisiert.")
+        }
+    }
+
+}
