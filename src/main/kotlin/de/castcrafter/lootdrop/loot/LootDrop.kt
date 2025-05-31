@@ -152,7 +152,7 @@ class LootDrop(
                     primary("LootDrop")
                 }
                 subtitle {
-                    text(Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("Gesammelt von"))
+                    text(Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("Eingesammelt\t\tdurch"))
                     spacer(" ${collector.name}")
                 }
                 times {
