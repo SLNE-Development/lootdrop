@@ -41,6 +41,10 @@ object SpecialItemListener : Listener {
         val player = event.entity as? Player ?: return
         val itemStack = event.item.itemStack
 
+        if (event.item.owner != player.uniqueId) {
+            return
+        }
+
         processItem(itemStack, player)
     }
 
