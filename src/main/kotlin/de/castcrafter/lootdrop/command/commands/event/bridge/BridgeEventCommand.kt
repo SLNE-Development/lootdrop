@@ -25,9 +25,8 @@ fun CommandAPICommand.bridgeEvent() = subcommand("bridge") {
     subcommand("start") {
         entitySelectorArgumentManyPlayers("players")
 
-        integerArgument(
-            "ticksBetweenEachBlock",
-            min = 1,
+        timeArgument(
+            "timeBetweenEachBlock",
             optional = true
         )
         booleanArgument("playersReceiveSameBlock", true)
@@ -36,12 +35,12 @@ fun CommandAPICommand.bridgeEvent() = subcommand("bridge") {
 
         anyExecutor { sender, args ->
             val players: List<Player> by args
-            val ticksBetweenEachBlock: Int? by args
+            val timeBetweenEachBlock: Int? by args
             val playersReceiveSameBlock: Boolean? by args
             val includeItems: Boolean? by args
             val includeNonSolids: Boolean? by args
 
-            val ticksBetweenEachBlockFilled = (ticksBetweenEachBlock ?: 20).ticks
+            val ticksBetweenEachBlockFilled = (timeBetweenEachBlock ?: 20).ticks
 
             if (players.size < 2) {
                 throw CommandAPI.failWithString("You must specify at least two players to start the bridge event.")
