@@ -24,7 +24,17 @@ object JoinListener : Listener {
         val shulkerBox = shulkerMeta.blockState as ShulkerBox
         val shulkerInventory = shulkerBox.inventory
 
-        shulkerInventory.addItem(ItemStack(Material.ICE, 2))
+        shulkerInventory.addItem(ItemStack(Material.ICE))
+        shulkerInventory.addItem(ItemStack(Material.LAVA_BUCKET))
+        shulkerInventory.addItem(ItemStack(Material.SUGAR_CANE))
+        shulkerInventory.addItem(ItemStack(Material.POINTED_DRIPSTONE))
+        shulkerInventory.addItem(ItemStack(Material.MELON_SLICE))
+        shulkerInventory.addItem(ItemStack(Material.PUMPKIN))
+        shulkerInventory.addItem(ItemStack(Material.BAMBOO))
+        shulkerInventory.addItem(ItemStack(Material.SPRUCE_SAPLING))
+        shulkerInventory.addItem(ItemStack(Material.DIRT, 8))
+        shulkerInventory.addItem(ItemStack(Material.GRASS_BLOCK))
+
         shulkerBox.update()
 
         shulkerMeta.blockState = shulkerBox
