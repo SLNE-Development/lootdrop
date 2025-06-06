@@ -1,3 +1,4 @@
+import dev.slne.surf.surfapi.gradle.util.registerSoft
 import dev.slne.surf.surfapi.gradle.util.withSurfApiBukkit
 
 plugins {
@@ -12,6 +13,7 @@ surfPaperPluginApi {
 
     serverDependencies {
 //        registerRequired("Nexo")
+        registerSoft("ChestProtect")
     }
 
     runServer {
@@ -27,4 +29,3 @@ dependencies {
 
 group = "de.castcrafter"
 version = "2.0.0-SNAPSHOT"
-description = "loot_drop"
