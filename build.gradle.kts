@@ -13,7 +13,6 @@ surfPaperPluginApi {
 
     serverDependencies {
         registerSoft("ChestProtect")
-        registerSoft("Nexo")
     }
 
     runServer {
@@ -22,7 +21,6 @@ surfPaperPluginApi {
 }
 
 dependencies {
-    compileOnlyApi(libs.nexo)
     compileOnlyApi(libs.chestprotect)
     api(libs.glyphs)
 }
