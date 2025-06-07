@@ -1,5 +1,6 @@
 package de.castcrafter.lootdrop.command.commands.event.mines.seamine
 
+import com.nexomc.nexo.api.NexoItems
 import de.castcrafter.lootdrop.listener.listeners.SEAMINE_KEY
 import de.castcrafter.lootdrop.utils.PermissionRegistry
 import dev.jorel.commandapi.CommandAPICommand
@@ -9,9 +10,12 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
 import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import kotlin.math.floor
+
+private val nexoSeamineItem by lazy {
+    NexoItems.itemFromId("lootdrop_seamine")!!.build()
+}
 
 fun CommandAPICommand.seamineCommand() = subcommand("seamine") {
     withPermission(PermissionRegistry.MINES_COMMAND_SEAMINE)
@@ -22,19 +26,10 @@ fun CommandAPICommand.seamineCommand() = subcommand("seamine") {
 }
 
 private fun summonMine(location: Location): Boolean {
-    println("Summoning mine at: $location")
     val x = floor(location.x) + 0.5
     val y = floor(location.y)
     val z = floor(location.z) + 0.5
     val roundedLocation = Location(location.world, x, y, z)
-
-    val heartOfTheSea = ItemStack(Material.HEART_OF_THE_SEA)
-    val meta = heartOfTheSea.itemMeta
-
-    if (meta != null) {
-        meta.setCustomModelData(2)
-        heartOfTheSea.setItemMeta(meta)
-    }
 
     val armorStand = roundedLocation.world.spawn(
         roundedLocation,
@@ -52,12 +47,16 @@ private fun summonMine(location: Location): Boolean {
         EquipmentSlot.OFF_HAND,
         EquipmentSlot.LEGS
     )
-    armorStand.equipment.helmet = heartOfTheSea
+    armorStand.equipment.helmet = nexoSeamineItem
+
 
     val chainLocation = armorStand.location.clone()
     chainLocation.x = floor(chainLocation.x)
     chainLocation.z = floor(chainLocation.z)
-    while (!chainLocation.block.type.isSolid) {
+
+    val lowestPossibleBlock = location.world.minHeight
+
+    while (!chainLocation.block.type.isSolid && chainLocation.block.y > lowestPossibleBlock) {
         chainLocation.block.type = Material.CHAIN
         chainLocation.subtract(0.0, 1.0, 0.0)
     }
