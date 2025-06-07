@@ -8,4 +8,4 @@ buildscript {
     }
 }
 
-rootProject.name = "loot_drop"
+rootProject.name = "lootdrop"

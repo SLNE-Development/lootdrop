@@ -12,6 +12,7 @@ surfPaperPluginApi {
     generateLibraryLoader(false)
 
     serverDependencies {
+        registerSoft("ChestProtect")
         registerSoft("Nexo")
     }
 
@@ -28,4 +29,3 @@ dependencies {
 
 group = "de.castcrafter"
 version = "2.0.0-SNAPSHOT"
-description = "loot_drop"

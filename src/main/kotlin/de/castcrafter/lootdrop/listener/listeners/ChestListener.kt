@@ -17,14 +17,17 @@ import org.bukkit.event.world.LootGenerateEvent
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
+
+private val CHEST_TYPES = objectListOf(
+    Material.CHEST,
+    Material.BARREL,
+    Material.SHULKER_BOX
+)
+
+private val LOOT_KEY = NamespacedKey("lootdrop", "loot")
+
+
 object ChestListener : Listener {
-
-    private val LOOT_KEY = NamespacedKey("lootdrop", "loot")
-
-    private val CHEST_TYPES = objectListOf(
-        Material.CHEST,
-        Material.BARREL
-    )
 
     @EventHandler
     fun onChestLock(event: ProtectionPreCreationEvent) {
@@ -51,38 +54,6 @@ object ChestListener : Listener {
         event.blockList().removeIf { block: Block -> checkBlock(block, null, false) }
     }
 
-    private fun checkBlock(block: Block, player: Player?, placed: Boolean): Boolean {
-        if (!CHEST_TYPES.contains(block.type)) {
-            return false
-        }
-
-        val tileState = block.state as TileState? ?: return false
-
-        val pdc: PersistentDataContainer = tileState.persistentDataContainer
-
-        if (pdc.has(LOOT_KEY, PersistentDataType.BOOLEAN) && player != null) {
-            if (placed) {
-                player.sendText {
-                    appendPrefix()
-
-                    error("Diese Kiste kann nicht protected werden. Sei kein Arsch!")
-                }
-
-                return true
-            }
-
-            player.sendText {
-                appendPrefix()
-
-                error("Diese Kiste kann nicht abgebaut werden. Sei kein Arsch!")
-            }
-
-            return true
-        }
-
-        return false
-    }
-
     @EventHandler
     fun onLootGenerate(event: LootGenerateEvent) {
         val block = event.lootContext.location.block
@@ -94,4 +65,45 @@ object ChestListener : Listener {
         val tileState = block.state as TileState? ?: return
         tileState.persistentDataContainer.set(LOOT_KEY, PersistentDataType.BOOLEAN, true)
     }
+}
+
+object ChestChestProtectListener : Listener {
+
+    @EventHandler
+    fun onChestLock(event: ProtectionPreCreationEvent) {
+        event.isCancelled = checkBlock(event.location.block, event.player.player, true)
+    }
+}
+
+
+private fun checkBlock(block: Block, player: Player?, placed: Boolean): Boolean {
+    if (!CHEST_TYPES.contains(block.type)) {
+        return false
+    }
+
+    val tileState = block.state as TileState? ?: return false
+
+    val pdc: PersistentDataContainer = tileState.persistentDataContainer
+
+    if (pdc.has(LOOT_KEY, PersistentDataType.BOOLEAN) && player != null) {
+        if (placed) {
+            player.sendText {
+                appendPrefix()
+
+                error("Diese Kiste kann nicht protected werden. Sei kein Arsch!")
+            }
+
+            return true
+        }
+
+        player.sendText {
+            appendPrefix()
+
+            error("Diese Kiste kann nicht abgebaut werden. Sei kein Arsch!")
+        }
+
+        return true
+    }
+
+    return false
 }
