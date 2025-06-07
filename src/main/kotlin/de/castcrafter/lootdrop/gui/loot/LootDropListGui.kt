@@ -33,7 +33,6 @@ fun SurfChestSinglePlayerGui.lootDropListGui(player: Player) = childPlayerMenu(t
 
     val pages = PaginatedPane(slot(0, 0), 9, 3).apply {
         populateWithGuiItems(LootDropManager.lootdrops.map { loot ->
-            println("LootDrop: ${loot.uniqueId} - ${loot.currentLocation}")
             GuiItem(buildLootDropItem(loot.uniqueId.toString())) {
                 it.playClickSound()
                 lootDropListOneGui(player, loot).open()
