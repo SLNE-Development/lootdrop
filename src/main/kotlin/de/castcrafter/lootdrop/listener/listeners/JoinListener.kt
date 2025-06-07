@@ -31,9 +31,11 @@ object JoinListener : Listener {
         shulkerInventory.addItem(ItemStack(Material.MELON_SLICE))
         shulkerInventory.addItem(ItemStack(Material.PUMPKIN))
         shulkerInventory.addItem(ItemStack(Material.BAMBOO))
-        shulkerInventory.addItem(ItemStack(Material.SPRUCE_SAPLING))
+        shulkerInventory.addItem(ItemStack(Material.SPRUCE_SAPLING, 4))
         shulkerInventory.addItem(ItemStack(Material.DIRT, 8))
         shulkerInventory.addItem(ItemStack(Material.GRASS_BLOCK))
+        shulkerInventory.addItem(ItemStack(Material.BONE, 8))
+        shulkerInventory.addItem(ItemStack(Material.SOUL_TORCH, 16))
 
         shulkerBox.update()
 
@@ -59,7 +61,8 @@ object JoinListener : Listener {
         }
 
         player.inventory.setItem(0, ItemStack(Material.BOW))
-        player.inventory.setItem(7, ItemStack(Material.ARROW, 10))
+        player.inventory.setItem(6, ItemStack(Material.ARROW, 10))
+        player.inventory.setItem(7, ItemStack(Material.STRIPPED_PALE_OAK_LOG, 16))
         player.inventory.setItem(8, ItemStack(Material.PUMPKIN_PIE, 16))
     }
 
