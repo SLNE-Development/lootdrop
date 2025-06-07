@@ -41,6 +41,35 @@ fun InventoryClickEvent.playClickSound() {
     }
 }
 
+val cleanupLootDropsItem by lazy {
+    ItemStack(Material.BRICK) {
+        displayName {
+            primary("LootDrops aufräumen")
+        }
+
+        buildLore {
+            line { }
+            line {
+                spacer("Hier kannst du LootDrops aufräumen")
+            }
+            line {
+                spacer("So werden alle LootDrops gelöscht,")
+            }
+            line {
+                spacer("die noch nicht abgeholt wurden")
+            }
+        }
+
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1021)
+        }
+    }
+}
+
 val emptyLootDropItem by lazy {
     ItemStack(Material.BRICK) {
         displayName {
