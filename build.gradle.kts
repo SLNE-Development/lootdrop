@@ -1,3 +1,4 @@
+import dev.slne.surf.surfapi.gradle.util.registerSoft
 import dev.slne.surf.surfapi.gradle.util.withSurfApiBukkit
 
 plugins {
@@ -11,7 +12,7 @@ surfPaperPluginApi {
     generateLibraryLoader(false)
 
     serverDependencies {
-//        registerRequired("Nexo")
+        registerSoft("Nexo")
     }
 
     runServer {

@@ -2,156 +2,68 @@ package de.castcrafter.lootdrop.gui.loot
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui
+import de.castcrafter.lootdrop.gui.*
 import de.castcrafter.lootdrop.loot.LootDropConfigurator
-import dev.slne.surf.bitmap.bitmaps.Bitmaps
-import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
-import dev.slne.surf.surfapi.bukkit.api.builder.buildLore
-import dev.slne.surf.surfapi.bukkit.api.builder.displayName
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.childPlayerMenu
-import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.drawOutlineRow
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.slot
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.staticPane
 import dev.slne.surf.surfapi.bukkit.api.inventory.types.SurfChestSinglePlayerGui
 import dev.slne.surf.surfapi.core.api.messages.adventure.buildText
-import dev.slne.surf.surfapi.core.api.messages.adventure.playSound
-import dev.slne.surf.surfapi.core.api.messages.adventure.text
-import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Material
-import org.bukkit.Sound
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.Player
 
 fun SurfChestSinglePlayerGui.lootDropProbabilityGui(player: Player, editable: Boolean = true) =
-    childPlayerMenu(
-        text(
-            Bitmaps.CLAN_CLOUDSHIFT.provider.translateToString("LootDrop\t\tWahrscheinlichkeit"),
-            NamedTextColor.WHITE
-        ),
-        5
-    ) {
-        drawOutlineRow(0)
-        drawOutlineRow(4)
-
-        staticPane(slot(0, 1), 3) {
+    childPlayerMenu(title3Gui, 3) {
+        staticPane(slot(0, 0), 3) {
             var guiItemStack: GuiItem? = null
 
-            item(slot(2, 1), ItemStack(Material.RED_DYE) {
-                displayName {
-                    primary("-10")
-                }
-                buildLore {
-                    line { }
-                    line {
-                        spacer("Verringerung der Wahrscheinlichkeit")
-                    }
-                    line {
-                        spacer("eines positiven LootDrops um 10")
-                    }
-                }
-            }) {
+            item(slot(2, 1), minus10ProbabilityItem) {
                 click = {
                     if (editable) {
                         LootDropConfigurator.goodChance -= 10
 
-                        player.playSound {
-                            type(Sound.UI_BUTTON_CLICK)
-                            volume(.5f)
-                        }
-
+                        playClickSound()
                         updateProbabilityDisplay(guiItemStack)
                     }
                 }
             }
 
-            item(slot(3, 1), ItemStack(Material.RED_DYE) {
-                displayName {
-                    primary("-1")
-                }
-                buildLore {
-                    line { }
-                    line {
-                        spacer("Verringerung der Wahrscheinlichkeit")
-                    }
-                    line {
-                        spacer("eines positiven LootDrops um 1")
-                    }
-                }
-            }) {
+            item(slot(3, 1), minus1ProbabilityItem) {
                 click = {
                     if (editable) {
                         LootDropConfigurator.goodChance -= 1
 
-                        player.playSound {
-                            type(Sound.UI_BUTTON_CLICK)
-                            volume(.5f)
-                        }
-
+                        playClickSound()
                         updateProbabilityDisplay(guiItemStack)
                     }
                 }
             }
 
-            item(slot(4, 1), ItemStack(Material.NAME_TAG) {
-                displayName {
-                    primary(LootDropConfigurator.goodChance)
-                }
-            }) {
+            item(slot(4, 1), buildLootProbabilityItem(LootDropConfigurator.goodChance)) {
                 guiItemStack = this
                 click = {
+                    playClickSound()
                     whoClicked.backToParent()
                 }
             }
 
-            item(slot(5, 1), ItemStack(Material.GREEN_DYE) {
-                displayName {
-                    primary("+1")
-                }
-                buildLore {
-                    line { }
-                    line {
-                        spacer("Erhöhung der Wahrscheinlichkeit")
-                    }
-                    line {
-                        spacer("eines positiven LootDrops um 1")
-                    }
-                }
-            }) {
+            item(slot(5, 1), plus1ProbabilityItem) {
                 click = {
                     if (editable) {
                         LootDropConfigurator.goodChance += 1
 
-                        player.playSound {
-                            type(Sound.UI_BUTTON_CLICK)
-                            volume(.5f)
-                        }
-
+                        playClickSound()
                         updateProbabilityDisplay(guiItemStack)
                     }
                 }
             }
 
-            item(slot(6, 1), ItemStack(Material.GREEN_DYE) {
-                displayName {
-                    primary("+10")
-                }
-                buildLore {
-                    line { }
-                    line {
-                        spacer("Erhöhung der Wahrscheinlichkeit")
-                    }
-                    line {
-                        spacer("eines positiven LootDrops um 10")
-                    }
-                }
-            }) {
+            item(slot(6, 1), plus10ProbabilityItem) {
                 click = {
                     if (editable) {
                         LootDropConfigurator.goodChance += 10
 
-                        player.playSound {
-                            type(Sound.UI_BUTTON_CLICK)
-                            volume(.5f)
-                        }
-
+                        playClickSound()
                         updateProbabilityDisplay(guiItemStack)
                     }
                 }
@@ -162,7 +74,8 @@ fun SurfChestSinglePlayerGui.lootDropProbabilityGui(player: Player, editable: Bo
 private fun ChestGui.updateProbabilityDisplay(item: GuiItem?) {
     item?.item?.editMeta {
         it.displayName(buildText {
-            primary(LootDropConfigurator.goodChance)
+            primary("${LootDropConfigurator.goodChance}%")
+            decoration(TextDecoration.ITALIC, false)
         })
     }
 
