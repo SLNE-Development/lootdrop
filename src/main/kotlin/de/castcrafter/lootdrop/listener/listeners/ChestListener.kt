@@ -20,7 +20,8 @@ import org.bukkit.persistence.PersistentDataType
 
 private val CHEST_TYPES = objectListOf(
     Material.CHEST,
-    Material.BARREL
+    Material.BARREL,
+    Material.SHULKER_BOX
 )
 
 private val LOOT_KEY = NamespacedKey("lootdrop", "loot")
