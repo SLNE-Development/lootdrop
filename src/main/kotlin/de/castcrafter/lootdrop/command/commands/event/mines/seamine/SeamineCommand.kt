@@ -1,11 +1,11 @@
 package de.castcrafter.lootdrop.command.commands.event.mines.seamine
 
-import com.nexomc.nexo.api.NexoItems
 import de.castcrafter.lootdrop.listener.listeners.SEAMINE_KEY
 import de.castcrafter.lootdrop.utils.PermissionRegistry
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor
 import dev.jorel.commandapi.kotlindsl.subcommand
+import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
@@ -13,8 +13,13 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.persistence.PersistentDataType
 import kotlin.math.floor
 
+@Suppress("UnstableApiUsage")
 private val nexoSeamineItem by lazy {
-    NexoItems.itemFromId("lootdrop_seamine")!!.build()
+    ItemStack(Material.BRICK) {
+        editMeta {
+            it.setCustomModelData(1028)
+        }
+    }
 }
 
 fun CommandAPICommand.seamineCommand() = subcommand("seamine") {

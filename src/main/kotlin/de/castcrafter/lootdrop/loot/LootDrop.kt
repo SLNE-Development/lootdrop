@@ -3,10 +3,10 @@ package de.castcrafter.lootdrop.loot
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
 import com.github.shynixn.mccoroutine.folia.ticks
-import com.nexomc.nexo.api.NexoItems
 import de.castcrafter.lootdrop.loot.action.LootActions
 import de.castcrafter.lootdrop.plugin
 import dev.slne.surf.bitmap.bitmaps.Bitmaps
+import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
 import dev.slne.surf.surfapi.bukkit.api.event.register
 import dev.slne.surf.surfapi.bukkit.api.event.unregister
 import dev.slne.surf.surfapi.bukkit.api.util.forEachPlayer
@@ -30,7 +30,11 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 private val nexoLootDropItem by lazy {
-    NexoItems.itemFromId("lootdrop_model")!!.build()
+    ItemStack(Material.BRICK) {
+        editMeta {
+            it.setCustomModelData(1027)
+        }
+    }
 }
 
 class LootDrop(
