@@ -30,11 +30,6 @@ private val LOOT_KEY = NamespacedKey("lootdrop", "loot")
 object ChestListener : Listener {
 
     @EventHandler
-    fun onChestLock(event: ProtectionPreCreationEvent) {
-        event.isCancelled = checkBlock(event.location.block, event.player.player, true)
-    }
-
-    @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         if (event.block.state !is TileState) {
             return

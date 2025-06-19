@@ -1,7 +1,9 @@
 package de.castcrafter.lootdrop.gui
 
-import com.nexomc.nexo.api.NexoItems
 import de.castcrafter.lootdrop.plugin
+import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
+import dev.slne.surf.surfapi.bukkit.api.builder.buildLore
+import dev.slne.surf.surfapi.bukkit.api.builder.displayName
 import dev.slne.surf.surfapi.core.api.messages.adventure.buildText
 import dev.slne.surf.surfapi.core.api.messages.adventure.playSound
 import dev.slne.surf.surfapi.core.api.messages.adventure.text
@@ -11,9 +13,6 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
-import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
 val title3Gui = text("<shift:-48>뉆", NamedTextColor.WHITE)
@@ -21,21 +20,18 @@ val title4Gui = text("<shift:-48>뉅", NamedTextColor.WHITE)
 
 val edgeKey = NamespacedKey(plugin, "edge")
 
-fun buildLootDropItem(name: String): ItemStack {
-    val item = NexoItems.itemFromId("lootdrop_item")?.build() ?: ItemStack(Material.BARREL)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
-            primary(name)
-            decoration(TextDecoration.ITALIC, false)
-        })
-
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
-        }
+fun buildLootDropItem(name: String) = ItemStack(Material.BRICK) {
+    displayName {
+        primary(name)
     }
 
-    return item
+    editPersistentDataContainer { pdc ->
+        pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+    }
+
+    editMeta { meta ->
+        meta.setCustomModelData(1014)
+    }
 }
 
 fun InventoryClickEvent.playClickSound() {
@@ -45,472 +41,387 @@ fun InventoryClickEvent.playClickSound() {
     }
 }
 
-fun ItemMeta.editPersistentDataContainer(block: PersistentDataContainer.() -> Unit): ItemMeta {
-    block(persistentDataContainer)
-    return this
+val cleanupLootDropsItem by lazy {
+    ItemStack(Material.BRICK) {
+        displayName {
+            primary("LootDrops aufräumen")
+        }
+
+        buildLore {
+            line { }
+            line {
+                spacer("Hier kannst du LootDrops aufräumen")
+            }
+            line {
+                spacer("So werden alle LootDrops gelöscht,")
+            }
+            line {
+                spacer("die noch nicht abgeholt wurden")
+            }
+        }
+
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1021)
+        }
+    }
 }
 
 val emptyLootDropItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_cross")?.build() ?: ItemStack(Material.BARRIER)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName {
             primary("Keine LootDrops")
-            decoration(TextDecoration.ITALIC, false)
-        })
+        }
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Es gibt aktuell keine LootDrops")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1024)
         }
     }
-
-    item
 }
 
 val listLootDropItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_menu")?.build() ?: ItemStack(Material.BOOK)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName {
             primary("LootDrop Liste")
-            decoration(TextDecoration.ITALIC, false)
-        })
+        }
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kann eine Liste")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("von LootDrops eingesehen werden")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1025)
+        }
+    }
+}
+
+private fun buildProbabilityItemModifier(
+    amount: Int,
+    cmd: Int,
+    fallback: Material = Material.BRICK,
+) = ItemStack(fallback) {
+    displayName {
+        primary(amount)
+    }
+
+    buildLore {
+        line { }
+        line {
+            spacer("Hier kannst du die Wahrscheinlichkeit")
+        }
+        line {
+            spacer("für einen LootDrop um $amount ändern")
         }
     }
 
-    item
+    editPersistentDataContainer { pdc ->
+        pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+    }
+
+    editMeta { meta ->
+        meta.setCustomModelData(cmd)
+    }
 }
 
 val minus10ProbabilityItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_minus_red")?.build() ?: ItemStack(Material.RED_DYE)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
-            primary("-10")
-            decoration(TextDecoration.ITALIC, false)
-        })
-
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
-                spacer("Verringerung der Wahrscheinlichkeit")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
-                spacer("eines positiven LootDrops um 10")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
-
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
-        }
-    }
-
-    item
+    buildProbabilityItemModifier(amount = -10, cmd = 1021)
 }
 
 val minus1ProbabilityItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_minus")?.build() ?: ItemStack(Material.RED_DYE)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
-            primary("-1")
-            decoration(TextDecoration.ITALIC, false)
-        })
-
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
-                spacer("Verringerung der Wahrscheinlichkeit")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
-                spacer("eines positiven LootDrops um 1")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
-
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
-        }
-    }
-
-    item
+    buildProbabilityItemModifier(amount = -1, cmd = 1020)
 }
 
 val plus1ProbabilityItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_plus")?.build() ?: ItemStack(Material.GREEN_DYE)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
-            primary("+1")
-            decoration(TextDecoration.ITALIC, false)
-        })
-
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
-                spacer("Erhöhung der Wahrscheinlichkeit")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
-                spacer("eines positiven LootDrops um 1")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
-
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
-        }
-    }
-
-    item
+    buildProbabilityItemModifier(amount = 1, cmd = 1018)
 }
 
 val plus10ProbabilityItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_plus_green")?.build() ?: ItemStack(Material.GREEN_DYE)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
-            primary("+10")
-            decoration(TextDecoration.ITALIC, false)
-        })
-
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
-                spacer("Erhöhung der Wahrscheinlichkeit")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
-                spacer("eines positiven LootDrops um 10")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
-
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
-        }
-    }
-
-    item
+    buildProbabilityItemModifier(amount = 10, cmd = 1019)
 }
 
 val goodLootItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_plus")?.build() ?: ItemStack(Material.CHEST)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName {
             primary("Guter Loot")
-            decoration(TextDecoration.ITALIC, false)
-        })
+        }
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kann der gute Loot")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("für den LootDrop konfiguriert werden")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1018)
         }
     }
-
-    item
 }
 
 val badLootItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_minus")?.build() ?: ItemStack(Material.TRAPPED_CHEST)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName {
             primary("Schlechter Loot")
-            decoration(TextDecoration.ITALIC, false)
-        })
+        }
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kann der schlechte Loot")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("für den LootDrop konfiguriert werden")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1020)
         }
     }
-
-    item
 }
 
-fun buildLootProbabilityItem(chance: Int): ItemStack {
-    val item = NexoItems.itemFromId("lootdrop_question")?.build() ?: ItemStack(Material.NAME_TAG)
 
-    item.editMeta { meta ->
-        meta.displayName(buildText {
-            primary("$chance%")
-            decoration(TextDecoration.ITALIC, false)
-        })
+fun buildLootProbabilityItem(chance: Int) = ItemStack(Material.BRICK) {
+    displayName {
+        primary("$chance%")
+    }
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
-                spacer("Hier kann die Wahrscheinlichkeit")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
-                spacer("für einen guten LootDrop")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
-                spacer("eingesehen werden")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
-
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+    buildLore {
+        line { }
+        line {
+            spacer("Hier kann die Wahrscheinlichkeit")
+        }
+        line {
+            spacer("für einen guten LootDrop")
+        }
+        line {
+            spacer("konfiguriert werden")
         }
     }
 
-    return item
+    editPersistentDataContainer { pdc ->
+        pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+    }
+
+    editMeta { meta ->
+        meta.setCustomModelData(1026)
+    }
 }
 
 val goodLootProbabilityItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_question")?.build() ?: ItemStack(Material.NAME_TAG)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName {
             primary("Wahrscheinlichkeit")
-            decoration(TextDecoration.ITALIC, false)
-        })
+        }
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kann die Wahrscheinlichkeit")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("für einen guten LootDrop")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("eingesehen werden")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1026)
         }
     }
-
-    item
 }
 
 val teleportLootDropItem by lazy {
-    val item =
-        NexoItems.itemFromId("lootdrop_circle")?.build() ?: ItemStack(Material.ENDER_PEARL)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName(buildText {
             primary("Teleportieren")
             decoration(TextDecoration.ITALIC, false)
         })
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kannst du dich zum LootDrop")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("teleportieren")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1022)
         }
     }
-
-    item
 }
 
 val deleteLootDropItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_minus_red")?.build() ?: ItemStack(Material.BARRIER)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName(buildText {
             primary("Löschen")
-            decoration(TextDecoration.ITALIC, false)
         })
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kann der LootDrop")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("gelöscht werden")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1021)
         }
     }
-
-    item
 }
 
 val backItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_back")?.build() ?: ItemStack(Material.BARRIER)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName(buildText {
             primary("Zurück")
-            decoration(TextDecoration.ITALIC, false)
         })
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kannst du zum vorherigen Menü")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("zurückkehren")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1017)
         }
     }
-
-    item
 }
 
 val spawnLootDropItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_plus_green")?.build() ?: ItemStack(Material.SPAWNER)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName(buildText {
             primary("LootDrop erstellen")
-            decoration(TextDecoration.ITALIC, false)
         })
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kann ein LootDrop erstellt werden")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1023)
         }
     }
-
-    item
 }
 
 val pageForwardItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_page_forward")?.build() ?: ItemStack(Material.ARROW)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName(buildText {
             primary("Nächste Seite")
-            decoration(TextDecoration.ITALIC, false)
         })
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kannst du zur nächsten Seite")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("der LootDrops wechseln")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1016)
         }
     }
-
-    item
 }
 
 val pageBackwardItem by lazy {
-    val item = NexoItems.itemFromId("lootdrop_page_backward")?.build() ?: ItemStack(Material.ARROW)
-
-    item.editMeta { meta ->
-        meta.displayName(buildText {
+    ItemStack(Material.BRICK) {
+        displayName(buildText {
             primary("Vorherige Seite")
-            decoration(TextDecoration.ITALIC, false)
         })
 
-        meta.lore(buildList {
-            add(text(""))
-            add(buildText {
+        buildLore {
+            line { }
+            line {
                 spacer("Hier kannst du zur vorherigen Seite")
-                decoration(TextDecoration.ITALIC, false)
-            })
-            add(buildText {
+            }
+            line {
                 spacer("der LootDrops wechseln")
-                decoration(TextDecoration.ITALIC, false)
-            })
-        })
+            }
+        }
 
-        meta.editPersistentDataContainer {
-            set(edgeKey, PersistentDataType.BOOLEAN, true)
+        editPersistentDataContainer { pdc ->
+            pdc.set(edgeKey, PersistentDataType.BOOLEAN, true)
+        }
+
+        editMeta { meta ->
+            meta.setCustomModelData(1015)
         }
     }
-
-    item
 }

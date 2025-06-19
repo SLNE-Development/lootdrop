@@ -9,6 +9,7 @@ import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.childPlayerMenu
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.slot
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.staticPane
 import dev.slne.surf.surfapi.bukkit.api.inventory.types.SurfChestSinglePlayerGui
+import dev.slne.surf.surfapi.core.api.messages.adventure.sendText
 import org.bukkit.entity.Player
 
 fun SurfChestSinglePlayerGui.lootDropListGui(player: Player) = childPlayerMenu(title4Gui, 4) {
@@ -28,12 +29,27 @@ fun SurfChestSinglePlayerGui.lootDropListGui(player: Player) = childPlayerMenu(t
                 }
             }
             return@staticPane
+        } else {
+            item(slot(6, 3), cleanupLootDropsItem) {
+                click = {
+                    val cleaned = LootDropManager.cleanupLootDrops()
+
+                    playClickSound()
+                    whoClicked.backToParent()
+
+                    whoClicked.sendText {
+                        appendPrefix()
+
+                        variableValue(cleaned)
+                        success(" LootDrops wurden aufgeräumt.")
+                    }
+                }
+            }
         }
     }
 
     val pages = PaginatedPane(slot(0, 0), 9, 3).apply {
         populateWithGuiItems(LootDropManager.lootdrops.map { loot ->
-            println("LootDrop: ${loot.uniqueId} - ${loot.currentLocation}")
             GuiItem(buildLootDropItem(loot.uniqueId.toString())) {
                 it.playClickSound()
                 lootDropListOneGui(player, loot).open()

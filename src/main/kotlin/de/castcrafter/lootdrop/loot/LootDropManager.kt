@@ -6,4 +6,14 @@ object LootDropManager {
 
     val lootdrops = mutableObjectSetOf<LootDrop>()
 
+    fun cleanupLootDrops(): Int {
+        val size = lootdrops.size
+
+        lootdrops.clone().forEach {
+            it.despawn()
+        }
+
+        return size
+    }
+
 }

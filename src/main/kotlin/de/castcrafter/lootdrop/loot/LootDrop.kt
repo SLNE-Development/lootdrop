@@ -6,6 +6,7 @@ import com.github.shynixn.mccoroutine.folia.ticks
 import de.castcrafter.lootdrop.loot.action.LootActions
 import de.castcrafter.lootdrop.plugin
 import dev.slne.surf.bitmap.bitmaps.Bitmaps
+import dev.slne.surf.surfapi.bukkit.api.builder.ItemStack
 import dev.slne.surf.surfapi.bukkit.api.event.register
 import dev.slne.surf.surfapi.bukkit.api.event.unregister
 import dev.slne.surf.surfapi.bukkit.api.util.forEachPlayer
@@ -27,6 +28,14 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+
+private val nexoLootDropItem by lazy {
+    ItemStack(Material.BRICK) {
+        editMeta {
+            it.setCustomModelData(1027)
+        }
+    }
+}
 
 class LootDrop(
     private val initiator: OfflinePlayer?,
@@ -68,7 +77,7 @@ class LootDrop(
                 EquipmentSlot.HAND,
                 EquipmentSlot.OFF_HAND,
             )
-            it.equipment.helmet = ItemStack.of(Material.HEART_OF_THE_SEA)
+            it.equipment.helmet = nexoLootDropItem
         }
 
         animator = plugin.launch(plugin.entityDispatcher(backingArmorStand)) {
