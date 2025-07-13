@@ -2,7 +2,7 @@ package de.castcrafter.lootdrop.command.commands.loot
 
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
-import de.castcrafter.lootdrop.gui.loot.lootDropGui
+import de.castcrafter.lootdrop.dialog.lootDropDialog
 import de.castcrafter.lootdrop.plugin
 import de.castcrafter.lootdrop.utils.PermissionRegistry
 import dev.jorel.commandapi.kotlindsl.commandAPICommand
@@ -13,7 +13,7 @@ fun lootDropCommand() = commandAPICommand("lootdrop") {
 
     playerExecutor { player, _ ->
         plugin.launch(plugin.entityDispatcher(player)) {
-            lootDropGui(player).open()
+            player.showDialog(lootDropDialog())
         }
     }
 }

@@ -39,7 +39,7 @@ private val nexoLootDropItem by lazy {
 
 class LootDrop(
     private val initiator: OfflinePlayer?,
-    private val initialLocation: Location = run {
+    val initialLocation: Location = run {
         val initiatorPlayer = initiator?.player
 
         if (initiator != null && initiator.isOnline && initiatorPlayer != null) {
@@ -51,9 +51,9 @@ class LootDrop(
 
         return@run Location(first, 0.0, highestBlock.y.toDouble() + 20.toDouble(), 0.0)
     },
-    private val goodChance: Int = LootDropConfigurator.goodChance,
-    private val goodLootContent: ObjectList<ItemStack> = LootDropConfigurator.goodLootContent,
-    private val badLootContent: ObjectList<ItemStack> = LootDropConfigurator.badLootContent,
+    val goodChance: Int = LootDropConfigurator.goodChance,
+    val goodLootContent: ObjectList<ItemStack> = LootDropConfigurator.goodLootContent,
+    val badLootContent: ObjectList<ItemStack> = LootDropConfigurator.badLootContent,
 ) : Listener {
 
     private lateinit var backingArmorStand: ArmorStand
