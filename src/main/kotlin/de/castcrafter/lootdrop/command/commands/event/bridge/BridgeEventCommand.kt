@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 package de.castcrafter.lootdrop.command.commands.event.bridge
 
 import com.github.shynixn.mccoroutine.folia.launch
@@ -13,10 +15,11 @@ import dev.slne.surf.surfapi.core.api.util.random
 import dev.slne.surf.surfapi.core.api.util.toObjectList
 import it.unimi.dsi.fastutil.objects.ObjectList
 import kotlinx.coroutines.*
-import org.bukkit.Material
+import org.bukkit.Registry
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ItemType
 import kotlin.random.asKotlinRandom
 
 private var job: Job? = null
@@ -114,24 +117,24 @@ private fun rollItems(
     playersReceiveSameBlock: Boolean,
     players: List<Player>
 ): Map<Player, ItemStack> {
-    val materials = MaterialCache.get(includeItems, includeNonSolids)
+    val materials = ItemTypeCache.get(includeItems, includeNonSolids)
     if (materials.isEmpty()) return emptyMap()
 
     return if (playersReceiveSameBlock) {
-        val shared = ItemStack.of(materials.random(random.asKotlinRandom()))
+        val shared = materials.random(random.asKotlinRandom()).createItemStack()
         players.associateWith { shared }
     } else {
-        players.associateWith { ItemStack.of(materials.random(random.asKotlinRandom())) }
+        players.associateWith { materials.random(random.asKotlinRandom()).createItemStack() }
     }
 }
 
-private object MaterialCache {
-    private val all = Material.entries.filterNot { it.isLegacy }.toObjectList()
-    private val blocksOnly = all.filterNot { it.isItem }.toObjectList()
-    private val solidsAndItems = all.filter { it.isSolid || it.isItem }.toObjectList()
-    private val solidBlocks = all.filter { it.isSolid && !it.isItem }.toObjectList()
+private object ItemTypeCache {
+    private val all = Registry.ITEM.toObjectList()
+    private val blocksOnly = all.filter { it.hasBlockType() }.toObjectList()
+    private val solidsAndItems = all.filter { !it.hasBlockType() || it.blockType.isSolid }.toObjectList()
+    private val solidBlocks = blocksOnly.filter { it.blockType.isSolid }.toObjectList()
 
-    fun get(includeItems: Boolean, includeNonSolids: Boolean): ObjectList<Material> =
+    fun get(includeItems: Boolean, includeNonSolids: Boolean): ObjectList<ItemType> =
         when {
             includeItems && includeNonSolids -> all
             !includeItems && includeNonSolids -> blocksOnly
